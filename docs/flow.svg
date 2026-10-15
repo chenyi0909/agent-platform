@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 660" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#475569"/>
+    </marker>
+    <marker id="arb" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#0e7490"/>
+    </marker>
+    <style>
+      .box { rx: 8; }
+      .sub { fill:#6b7280; font-size:10.5px; }
+      .h { font-weight:700; }
+    </style>
+  </defs>
+
+  <rect width="980" height="660" fill="#ffffff"/>
+  <text x="490" y="32" text-anchor="middle" font-size="22" font-weight="700" fill="#111827">智能体中台 · 项目流程图</text>
+
+  <!-- ===================== 链路 A：RAG 对话流程 ===================== -->
+  <text x="40" y="64" class="h" font-size="15" fill="#4338ca">链路 A · RAG 对话流程（实时 / 同步 + 流式）</text>
+
+  <g font-size="11.5" text-anchor="middle">
+    <!-- 1 -->
+    <rect class="box" x="32" y="80" width="104" height="72" fill="#e0e7ff" stroke="#6366f1"/><text x="84" y="106" class="h">用户请求</text><text x="84" y="126" class="sub">query + kb_id</text>
+    <!-- 2 -->
+    <rect class="box" x="146" y="80" width="104" height="72" fill="#e0e7ff" stroke="#6366f1"/><text x="198" y="106" class="h">FastAPI 网关</text><text x="198" y="126" class="sub">鉴权/校验/trace</text>
+    <!-- 3 -->
+    <rect class="box" x="260" y="80" width="104" height="72" fill="#e0e7ff" stroke="#6366f1"/><text x="312" y="106" class="h">构造状态</text><text x="312" y="126" class="sub">user_id,kb_id</text>
+    <!-- 4 路由 -->
+    <rect class="box" x="374" y="80" width="104" height="72" fill="#a5f3fc" stroke="#06b6d4"/><text x="426" y="106" class="h">路由 Agent</text><text x="426" y="126" class="sub">需检索?</text>
+    <!-- 5 召回 -->
+    <rect class="box" x="488" y="80" width="104" height="72" fill="#bbf7d0" stroke="#22c55e"/><text x="540" y="104" class="h">并行召回</text><text x="540" y="122" class="sub">Milvus 向量</text><text x="540" y="138" class="sub">ES 全文</text>
+    <!-- 6 rerank -->
+    <rect class="box" x="602" y="80" width="104" height="72" fill="#bbf7d0" stroke="#22c55e"/><text x="654" y="106" class="h">融合+Rerank</text><text x="654" y="126" class="sub">RRF/远程</text>
+    <!-- 7 生成 -->
+    <rect class="box" x="716" y="80" width="104" height="72" fill="#a5f3fc" stroke="#06b6d4"/><text x="768" y="106" class="h">生成 Agent</text><text x="768" y="126" class="sub">LLM 作答</text>
+    <!-- 8 返回 -->
+    <rect class="box" x="844" y="80" width="104" height="72" fill="#fde68a" stroke="#f59e0b"/><text x="896" y="104" class="h">SSE 返回</text><text x="896" y="122" class="sub">+ 落库</text><text x="896" y="138" class="sub">MySQL/Redis</text>
+  </g>
+
+  <!-- 水平箭头 -->
+  <g stroke="#475569" stroke-width="1.8" marker-end="url(#ar)">
+    <line x1="136" y1="116" x2="144" y2="116"/>
+    <line x1="250" y1="116" x2="258" y2="116"/>
+    <line x1="364" y1="116" x2="372" y2="116"/>
+    <line x1="478" y1="116" x2="486" y2="116"/>
+    <line x1="592" y1="116" x2="600" y2="116"/>
+    <line x1="706" y1="116" x2="714" y2="116"/>
+    <line x1="820" y1="116" x2="842" y2="116"/>
+  </g>
+
+  <!-- 分支：路由 否 -> 生成 Agent -->
+  <path d="M426,152 C426,200 768,200 768,154" fill="none" stroke="#0e7490" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arb)"/>
+  <text x="597" y="196" text-anchor="middle" font-size="10.5" fill="#0e7490">无需检索 → 直接生成</text>
+
+  <!-- 落库说明 -->
+  <text x="896" y="172" text-anchor="middle" font-size="10" fill="#9ca3af">Checkpoint 断点持久化</text>
+
+  <!-- ===================== 链路 B：文档异步摄入 ===================== -->
+  <text x="40" y="256" class="h" font-size="15" fill="#15803d">链路 B · 文档异步摄入流程（离线 / 异步，不阻塞 API）</text>
+
+  <g font-size="11.5" text-anchor="middle">
+    <rect class="box" x="32" y="272" width="104" height="72" fill="#e0e7ff" stroke="#6366f1"/><text x="84" y="298" class="h">文件上传</text><text x="84" y="318" class="sub">FastAPI 接收</text>
+    <rect class="box" x="146" y="272" width="104" height="72" fill="#e0e7ff" stroke="#6366f1"/><text x="198" y="298" class="h">解析</text><text x="198" y="318" class="sub">parse_upload</text>
+    <rect class="box" x="260" y="272" width="104" height="72" fill="#fde68a" stroke="#f59e0b"/><text x="312" y="298" class="h">Redis 队列</text><text x="312" y="318" class="sub">enqueue</text>
+    <rect class="box" x="374" y="272" width="104" height="72" fill="#fde68a" stroke="#f59e0b"/><text x="426" y="298" class="h">ingest worker</text><text x="426" y="318" class="sub">后台消费</text>
+    <rect class="box" x="488" y="272" width="104" height="72" fill="#bbf7d0" stroke="#22c55e"/><text x="540" y="298" class="h">切分</text><text x="540" y="318" class="sub">chunker</text>
+    <rect class="box" x="602" y="272" width="104" height="72" fill="#bbf7d0" stroke="#22c55e"/><text x="654" y="298" class="h">Embedding</text><text x="654" y="318" class="sub">向量化</text>
+    <rect class="box" x="716" y="272" width="104" height="72" fill="#bbf7d0" stroke="#22c55e"/><text x="768" y="298" class="h">写 Milvus+ES</text><text x="768" y="318" class="sub">向量+原文</text>
+    <rect class="box" x="844" y="272" width="104" height="72" fill="#fef3c7" stroke="#d97706"/><text x="896" y="298" class="h">更新 MySQL</text><text x="896" y="318" class="sub">文档状态</text>
+  </g>
+
+  <g stroke="#475569" stroke-width="1.8" marker-end="url(#ar)">
+    <line x1="136" y1="308" x2="144" y2="308"/>
+    <line x1="250" y1="308" x2="258" y2="308"/>
+    <line x1="364" y1="308" x2="372" y2="308"/>
+    <line x1="478" y1="308" x2="486" y2="308"/>
+    <line x1="592" y1="308" x2="600" y2="308"/>
+    <line x1="706" y1="308" x2="714" y2="308"/>
+    <line x1="820" y1="308" x2="842" y2="308"/>
+  </g>
+
+  <!-- ===================== 说明区 ===================== -->
+  <rect x="40" y="384" width="900" height="170" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="60" y="412" class="h" font-size="13" fill="#334155">关键设计点</text>
+  <g font-size="12" fill="#475569">
+    <text x="60" y="438">1. 链路 A 同步返回答案，但 LLM 生成以 SSE 逐 token 流式下发，降低首字延迟；大状态经 Redis Checkpointer 持久化、支持多实例共享与断点恢复。</text>
+    <text x="60" y="462">2. 链路 B 全程异步：API 仅做解析 + 入 Redis 队列，worker 后台切分/向量化/入库，避免大文件 CPU 密集操作阻塞请求线程。</text>
+    <text x="60" y="486">3. 混合检索：Milvus 向量召回 + ES 全文召回 → 融合(RRF) → 可选远程 Rerank(BGE-Reranker) 精排，召回数量受控防重排变慢。</text>
+    <text x="60" y="510">4. 分层存储防热点：MySQL 仅存元数据；Milvus 仅存向量+doc_id；ES 存原文，经 doc_id 关联；热点 query 结果 Redis 缓存(TTL 600s)。</text>
+    <text x="60" y="534">5. 多租户隔离可经 Milvus 分区(kb_id) + MySQL 行级权限 + ES 索引隔离实现；Agent 版本灰度可保存不同 LangGraph 工作流。</text>
+    <text x="60" y="558">6. 可观测性：请求 trace_id 贯穿全链路，接口/LLM/检索/各节点耗时可接 OpenTelemetry + Prometheus/Grafana。</text>
+  </g>
+
+  <text x="490" y="600" text-anchor="middle" class="sub" fill="#9ca3af">部署形态：api 服务（链路 A 主流程） + ingest 服务（链路 B worker），共享 MySQL/Redis/Milvus/ES</text>
+</svg>

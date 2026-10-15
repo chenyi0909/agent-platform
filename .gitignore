@@ -1,0 +1,3 @@
+# Python 编译文件与缓存
+__pycache__/
+*.pyc

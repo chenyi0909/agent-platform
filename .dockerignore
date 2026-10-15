@@ -1,0 +1,10 @@
+# 依赖与缓存，避免重复构建镜像
+**/__pycache__/
+*.py[cod]
+.env
+.venv/
+venv/
+*.log
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
